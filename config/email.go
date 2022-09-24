@@ -7,7 +7,9 @@ type EmailConfig struct {
 	Port      int
 	Username  string
 	Password  string
+	AddressMail string
 	SmtpAuth smtp.Auth
+
 }
 
 func AuthEmail(conf Config) EmailConfig{
@@ -18,6 +20,7 @@ func AuthEmail(conf Config) EmailConfig{
 		Port:     conf.Email.Port,
 		Username: conf.Email.Email,
 		Password: conf.Email.Password,
+		AddressMail: conf.Email.AddressMail,
 		SmtpAuth: auth,
 	}
 }

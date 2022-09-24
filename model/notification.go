@@ -9,5 +9,7 @@ type PayloadNotificationRequest struct {
 }
 
 type ResponseNotification struct {
-	Message string `json:"message"`
+	Device string `json:"device"`
+	Title  string `json:"title"`
+	Type	string `json:"type"`
 }

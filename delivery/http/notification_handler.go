@@ -24,15 +24,13 @@ func PublishNotif(notifSrv notifSrv.PublishService) echo.HandlerFunc {
 			return c.JSON(400, err)
 		}
 
-
-		test, err := notifSrv.PublishNotif(c.Request().Context(), payload)
+		// call service	
+		result, err := notifSrv.PublishNotif(c.Request().Context(), payload)
 		if err != nil {
 			return c.JSON(400, err)
 		}
-		fmt.Println(test)
-		// 	return c.JSON(400, err)
-		// }
-		return c.JSON(200, test)
+
+		return common.SuccessResponse(c, 200, result)
 	}
 }
 

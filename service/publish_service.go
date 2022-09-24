@@ -10,7 +10,7 @@ import (
 )
 
 type PublishService interface {
-	PublishNotif(ctx context.Context, user *model.PayloadNotificationRequest) (string, error)
+	PublishNotif(ctx context.Context, user *model.PayloadNotificationRequest) (result *model.ResponseNotification, err error)
 }
 
 type publishService struct {
@@ -21,16 +21,22 @@ func NewPublishService(msBroker repository.MessageBrokerNotificationRepository) 
 	return &publishService{msBroker}
 }
 
-func (s *publishService) PublishNotif(ctx context.Context, user *model.PayloadNotificationRequest) (string, error) {
+func (s *publishService) PublishNotif(ctx context.Context, user *model.PayloadNotificationRequest) (result *model.ResponseNotification, err error) {
 
 	queueDeclare := s.msBroker.QueueDeclareRepo(common.FirebaseKey)
 
-	data, err := s.msBroker.PublishNotifArtikel(ctx, user, queueDeclare)
+	_, err = s.msBroker.PublishNotifArtikel(ctx, user, queueDeclare)
 	if err != nil {
-		return "", err
+		return nil, err
+	}
+
+	result = &model.ResponseNotification{
+		Device : user.Device,
+		Title: user.Title,
+		Type: user.Type,
 	}
 	
-	return data, nil
+	return result, nil
 }
 // func (s *publishService) PublishNotif(ctx context.Context, user &model.PayloadNotificationRequest) (string, error) {
 // 	return nil, nil
