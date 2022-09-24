@@ -1,7 +1,7 @@
 package service
 
 import (
-	"context"
+	"fmt"
 	"notif-engine/model"
 	"notif-engine/repository"
 )
@@ -30,11 +30,12 @@ func (s *consumeNotificationService) ConsumeNotificationFirebase() (result model
 
 func (s *consumeNotificationService) ConsumeNotificationEmailArtikel(topicName string) (result model.PayloadNotificationRequest, err error) {
 	declareQueue := s.msBroker.QueueDeclareRepo(topicName)
-
+	fmt.Println("declareQueue", declareQueue)
 	consume , err := s.msBroker.ConsumeNotifArtikel(declareQueue)
 	if err != nil {
 		return result, err
 	}
+	fmt.Println("consume", consume)
 	go func() {
 		s.msBroker.ConsumeWorkerEmail(consume)
 	}()

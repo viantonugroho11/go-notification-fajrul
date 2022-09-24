@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"notif-engine/common"
 	"notif-engine/model"
 
@@ -10,6 +11,7 @@ import (
 )
 
 // var ch *amqp.Channel
+//deprecated
 func (msBroker *messageRepository) PublishNotification(ctx context.Context, user *model.PayloadNotificationRequest) (string, error) {
 
 	queue, _ := msBroker.confQueue.Ch.QueueDeclare(user.Type, false, false, false, false, nil)
@@ -37,7 +39,7 @@ func (msBroker *messageRepository) PublishNotifArtikel(ctx context.Context, user
 	return common.SuccesMessage, nil
 }
 
-func (msBroker *messageRepository) ConsumeNotifArtikel(ctx context.Context, channel *amqp.Queue)(result <-chan amqp.Delivery, err error){
+func (msBroker *messageRepository) ConsumeNotifArtikel(channel *amqp.Queue)(result <-chan amqp.Delivery, err error){
 	msgs, err := msBroker.confQueue.Ch.Consume(channel.Name, "", true, false, false, false, nil)
 	if err != nil {
 		return nil, err
@@ -64,7 +66,7 @@ func (msBroker *messageRepository) ConsumeNotificationFirebase() (result model.P
 }
 
 
-func (msBroker *messageRepository) ConsumeWorkerEmail(ctx context.Context, message <-chan amqp.Delivery) {
+func (msBroker *messageRepository) ConsumeWorkerEmail(message <-chan amqp.Delivery) {
 	var result model.PayloadNotificationRequest
 	for d := range message {
 		body := string(d.Body)
@@ -82,9 +84,10 @@ func (msBroker *messageRepository) ConsumeWorkerEmail(ctx context.Context, messa
 			Body:   message,
 			Title:  title,
 		}
+		fmt.Println(result)
 		// msBroker.FirebasePushRepo(&result)
 	}
-	msBroker.PublishNotification(ctx, &result)
+	// msBroker.PublishNotification(&result)
 }
 
 

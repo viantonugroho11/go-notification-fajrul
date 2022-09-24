@@ -35,10 +35,12 @@ type MessageBrokerNotificationRepository interface {
 	
 	
 	QueueDeclareRepo(name string) *amqp.Queue
+
+	//deprecated
 	ConsumeNotificationFirebase() (result model.PayloadNotificationRequest, err error)
 
-	ConsumeNotifArtikel(ctx context.Context, channel *amqp.Queue)(result <-chan amqp.Delivery, err error)
-	ConsumeWorkerEmail(ctx context.Context, message <-chan amqp.Delivery)
+	ConsumeNotifArtikel(channel *amqp.Queue)(result <-chan amqp.Delivery, err error)
+	ConsumeWorkerEmail(message <-chan amqp.Delivery)
 	
 }
 
@@ -53,4 +55,17 @@ func NewFirebaseRepository(confQueue config.MessageBrokerConfig, confFb config.F
 
 type FirebaseRepository interface {
 	FirebasePushRepo(user *model.PayloadNotificationRequest) (string, error)
+}
+
+type emailRepository struct {
+	confQueue config.MessageBrokerConfig
+	confEmail config.EmailConfig
+}
+
+func NewEmailRepository(confQueue config.MessageBrokerConfig, confEmail config.EmailConfig) EmailRepository {
+	return &emailRepository{confQueue, confEmail}
+}
+
+type EmailRepository interface {
+	EmailPushRepo(user *model.PayloadNotificationRequest) (string, error)
 }
