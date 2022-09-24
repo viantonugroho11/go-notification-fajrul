@@ -2,8 +2,9 @@ package service
 
 import (
 	"context"
-	"fmt"
+	// "fmt"
 
+	"notif-engine/common"
 	"notif-engine/model"
 	"notif-engine/repository"
 )
@@ -21,13 +22,13 @@ func NewPublishService(msBroker repository.MessageBrokerNotificationRepository) 
 }
 
 func (s *publishService) PublishNotif(ctx context.Context, user *model.PayloadNotificationRequest) (string, error) {
-	// return s.msBroker.PublishNotif(ctx, user)
-	data , err := s.msBroker.PublishNotification(ctx, user)
+
+	queueDeclare := s.msBroker.QueueDeclareRepo(common.FirebaseKey)
+
+	data, err := s.msBroker.PublishNotifArtikel(ctx, user, queueDeclare)
 	if err != nil {
 		return "", err
 	}
-	fmt.Println(data)
-
 	
 	return data, nil
 }

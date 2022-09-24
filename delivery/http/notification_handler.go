@@ -18,7 +18,7 @@ func PublishNotif(notifSrv notifSrv.PublishService) echo.HandlerFunc {
 		
 		payload := &model.PayloadNotificationRequest{}
 		c.Bind(payload)
-		fmt.Println("handler",payload)
+		fmt.Println("payload handler",payload)
 
 		if err := common.ValidateStruct(payload); err != nil {
 			return c.JSON(400, err)
@@ -32,7 +32,7 @@ func PublishNotif(notifSrv notifSrv.PublishService) echo.HandlerFunc {
 		fmt.Println(test)
 		// 	return c.JSON(400, err)
 		// }
-		return nil
+		return c.JSON(200, test)
 	}
 }
 

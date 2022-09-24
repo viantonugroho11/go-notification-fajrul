@@ -10,12 +10,13 @@ import (
 var ch *amqp.Channel
 
 type MessageBrokerConfig struct {
-	Host     string
-	Port     string
-	Username string
-	Password string
-	Dial     string
-	Ch       *amqp.Channel
+	Host                 string
+	Port                 string
+	Username             string
+	Password             string
+	QueueRoutingFirebase string
+	Dial                 string
+	Ch                   *amqp.Channel
 }
 
 func InitQueue(conf Config) MessageBrokerConfig {

@@ -14,5 +14,5 @@ queue:
   port: 6379
   pass:
   username:
-  dial: "amqps://notification:notification123@b-bc213140-45a3-4522-8bb1-6e8156c0af68.mq.ap-southeast-3.amazonaws.com:5671"
+  dial: "amqps://siquinxc:29OzHKEFqBOrmxA8z6IRIMUewXXiAAaf@fly.rmq.cloudamqp.com/siquinxc"
 

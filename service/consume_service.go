@@ -8,7 +8,7 @@ import (
 
 type ConsumeNotificationService interface {
 	ConsumeNotificationFirebase() (result model.PayloadNotificationRequest, err error)
-	ConsumeNotificationEmailArtikel(ctx context.Context, topicName string) (result model.PayloadNotificationRequest, err error)
+	ConsumeNotificationEmailArtikel(topicName string) (result model.PayloadNotificationRequest, err error)
 }
 
 type consumeNotificationService struct {
@@ -28,14 +28,15 @@ func (s *consumeNotificationService) ConsumeNotificationFirebase() (result model
   return result, nil	
 }
 
-func (s *consumeNotificationService) ConsumeNotificationEmailArtikel(ctx context.Context,topicName string) (result model.PayloadNotificationRequest, err error) {
+func (s *consumeNotificationService) ConsumeNotificationEmailArtikel(topicName string) (result model.PayloadNotificationRequest, err error) {
 	declareQueue := s.msBroker.QueueDeclareRepo(topicName)
-	consume , err := s.msBroker.ConsumeNotifArtikel(ctx, declareQueue)
+
+	consume , err := s.msBroker.ConsumeNotifArtikel(declareQueue)
 	if err != nil {
 		return result, err
 	}
 	go func() {
-		s.msBroker.ConsumeWorkerEmail(ctx, consume)
+		s.msBroker.ConsumeWorkerEmail(consume)
 	}()
 	return result, nil
 }

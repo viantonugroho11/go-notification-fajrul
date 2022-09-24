@@ -1,13 +1,17 @@
 package main
 
 import (
+	"fmt"
+	conf "notif-engine/config"
+	consumeHandler "notif-engine/delivery/consume"
+	httpHandler "notif-engine/delivery/http"
 	"notif-engine/repository"
 	"notif-engine/service"
-	conf "notif-engine/config"
-	httpHandler "notif-engine/delivery/http"
+
 	"github.com/labstack/echo/v4"
 	// amqp "github.com/rabbitmq/amqp091-go"
 )
+
 // var ch *amqp.Channel
 
 func main() {
@@ -17,6 +21,7 @@ func main() {
 	msRepo := repository.NewMessageBrokerRepository(confQueue)
 
 	msBroker := service.NewPublishService(msRepo)
+	msConsume := service.NewConsumeNotificationService(msRepo)
 	e := echo.New()
 	api := e.Group("/api")
 	e.GET("/health",func(c echo.Context) error {
@@ -24,8 +29,12 @@ func main() {
 	})
 	
 
+
+		fmt.Println("masuk")
+		go consumeHandler.NewNotificationConsume(msConsume)
 	httpHandler.NewNotificationHandler(api.Group("/v1/notification"), msBroker)
 	// api
+
 	e.Logger.Fatal(e.Start(":1324"))
 
 }
