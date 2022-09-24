@@ -7,7 +7,7 @@ import (
 )
 
 type ConsumeNotificationService interface {
-	ConsumeNotificationFirebase() (result model.PayloadNotificationRequest, err error)
+	// ConsumeNotificationFirebase() (result model.PayloadNotificationRequest, err error)
 	ConsumeNotificationEmailArtikel(topicName string) (result model.PayloadNotificationRequest, err error)
 }
 
@@ -19,14 +19,14 @@ func NewConsumeNotificationService(msBroker repository.MessageBrokerNotification
 	return &consumeNotificationService{msBroker}
 }
 
-func (s *consumeNotificationService) ConsumeNotificationFirebase() (result model.PayloadNotificationRequest, err error) {	
-	result , err = s.msBroker.ConsumeNotificationFirebase()
-	if err != nil {
-		return result, err
-	}
+// func (s *consumeNotificationService) ConsumeNotificationFirebase() (result model.PayloadNotificationRequest, err error) {	
+// 	result , err = s.msBroker.ConsumeNotificationFirebase()
+// 	if err != nil {
+// 		return result, err
+// 	}
 	
-  return result, nil	
-}
+//   return result, nil	
+// }
 
 func (s *consumeNotificationService) ConsumeNotificationEmailArtikel(topicName string) (result model.PayloadNotificationRequest, err error) {
 	declareQueue := s.msBroker.QueueDeclareRepo(topicName)

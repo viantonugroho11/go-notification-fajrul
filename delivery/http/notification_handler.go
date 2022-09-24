@@ -11,6 +11,8 @@ import (
 
 func NewNotificationHandler(app *echo.Group, notifSrv notifSrv.PublishService) {
 	app.POST("/", PublishNotif(notifSrv))
+	app.POST("/artikel", PublishNotificationArtikel(notifSrv))
+	app.POST("/kabar-donasi", PublishNotificationKabarDonasi(notifSrv))
 }
 
 func PublishNotif(notifSrv notifSrv.PublishService) echo.HandlerFunc {
@@ -34,3 +36,14 @@ func PublishNotif(notifSrv notifSrv.PublishService) echo.HandlerFunc {
 	}
 }
 
+func PublishNotificationArtikel(notifSrv notifSrv.PublishService) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		return nil
+	}
+}
+
+func PublishNotificationKabarDonasi(notifSrv notifSrv.PublishService) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		return nil
+	}
+}

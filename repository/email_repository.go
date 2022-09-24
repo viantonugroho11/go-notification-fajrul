@@ -23,3 +23,23 @@ func (em *emailRepository) EmailPushRepo(user *model.PayloadNotificationRequest)
 	return "success", nil
 }
 
+func (em *emailRepository) EmailPushTiketDonasi()(){
+
+
+	//use template html
+	
+}
+
+func (em *emailRepository) EmailPushNewsletter()(){
+
+
+	//use template html
+	
+}
+
+func (em *emailRepository) EmailPushKabarDonasi()(){
+
+
+	//use template html
+	
+}

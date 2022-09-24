@@ -30,14 +30,16 @@ func NewMessageBrokerRepository(confQueue config.MessageBrokerConfig) MessageBro
 }
 
 type MessageBrokerNotificationRepository interface {
-	PublishNotification(ctx context.Context, user *model.PayloadNotificationRequest) (string, error)
+	// PublishNotification(ctx context.Context, user *model.PayloadNotificationRequest) (string, error)
+
+	
 	PublishNotifArtikel(ctx context.Context, user *model.PayloadNotificationRequest, channel *amqp.Queue) (string, error)
 	
 	
 	QueueDeclareRepo(name string) *amqp.Queue
 
 	//deprecated
-	ConsumeNotificationFirebase() (result model.PayloadNotificationRequest, err error)
+	// ConsumeNotificationFirebase() (result model.PayloadNotificationRequest, err error)
 
 	ConsumeNotifArtikel(channel *amqp.Queue)(result <-chan amqp.Delivery, err error)
 	ConsumeWorkerEmail(message <-chan amqp.Delivery)
