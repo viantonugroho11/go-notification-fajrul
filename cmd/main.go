@@ -19,9 +19,11 @@ func main() {
 
 	confQueue := conf.InitQueue(config)
 	confEmail := conf.AuthEmail(config)
-	msRepo := repository.NewMessageBrokerRepository(confQueue)
+	confDb := conf.InitDb(config)
 
+	msRepo := repository.NewMessageBrokerRepository(confQueue)
 	emailRepo := repository.NewEmailRepository(confQueue, confEmail)
+	_ = repository.NewMysqlNewsletterRepository(confDb)
 
 	msBroker := service.NewPublishService(msRepo)
 	msConsume := service.NewConsumeNotificationService(msRepo, emailRepo)

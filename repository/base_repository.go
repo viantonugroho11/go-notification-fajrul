@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	// "database/sql"
+	// "database/sql"
 	"notif-engine/config"
 	"notif-engine/model"
 
@@ -20,6 +21,20 @@ func NewPostgreRepository(ch *amqp.Channel) PostgreUserRepository {
 type PostgreUserRepository interface {
 	
 }
+
+//mysql newsletter
+type mysqlNewsletterRepository struct {
+	Conn config.DatabaseConfig
+}
+
+func NewMysqlNewsletterRepository(conn config.DatabaseConfig) MysqlNewsletterRepository {
+	return &mysqlNewsletterRepository{conn}
+}
+
+type MysqlNewsletterRepository interface {
+	GetAllNewsletter() ([]model.GetAllNewsletter, error)
+}
+
 
 type messageRepository struct {
 	confQueue config.MessageBrokerConfig

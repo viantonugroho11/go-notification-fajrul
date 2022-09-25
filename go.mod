@@ -5,6 +5,7 @@ go 1.17
 require (
 	github.com/appleboy/go-fcm v0.1.5
 	github.com/go-playground/validator/v10 v10.11.0
+	github.com/go-sql-driver/mysql v1.6.0
 	github.com/labstack/echo/v4 v4.9.0
 	github.com/rabbitmq/amqp091-go v1.5.0
 	github.com/spf13/viper v1.13.0
