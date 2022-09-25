@@ -15,4 +15,10 @@ queue:
   pass:
   username:
   dial: "amqps://siquinxc:29OzHKEFqBOrmxA8z6IRIMUewXXiAAaf@fly.rmq.cloudamqp.com/siquinxc"
-
+email:
+  host: smtp.gmail.com
+  port: 587
+  emailkey: ""
+  password: ""
+  address_mail: ""
+  from_name_email: ""

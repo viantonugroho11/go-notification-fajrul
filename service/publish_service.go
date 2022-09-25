@@ -11,6 +11,8 @@ import (
 
 type PublishService interface {
 	PublishNotif(ctx context.Context, user *model.PayloadNotificationRequest) (result *model.ResponseNotification, err error)
+	PublishNotificationArtikel(ctx context.Context, user *model.PayloadNotificationArtikel) (result *model.ResponseNotificationBlast, err error)
+	PublishNotificationKabarDonasi(ctx context.Context, user *model.PayloadNotificationKabarDonasi) (result *model.ResponseNotificationBlast, err error)
 }
 
 type publishService struct {
@@ -35,9 +37,40 @@ func (s *publishService) PublishNotif(ctx context.Context, user *model.PayloadNo
 		Title: user.Title,
 		Type: user.Type,
 	}
-	
+
 	return result, nil
 }
-// func (s *publishService) PublishNotif(ctx context.Context, user &model.PayloadNotificationRequest) (string, error) {
-// 	return nil, nil
-// }
+
+func (s *publishService) PublishNotificationArtikel(ctx context.Context, user *model.PayloadNotificationArtikel) (result *model.ResponseNotificationBlast, err error) {
+
+	// queueDeclare := s.msBroker.QueueDeclareRepo(common.EmailKey)
+
+	// _, err = s.msBroker.PublishNotifArtikel(ctx, user, queueDeclare)
+	// if err != nil {
+	// 	return nil, err
+	// }
+
+	result = &model.ResponseNotificationBlast{
+		Title: user.Title,
+		Body: user.Body,
+	}
+
+	return result, nil
+}
+
+func (s *publishService) PublishNotificationKabarDonasi(ctx context.Context, user *model.PayloadNotificationKabarDonasi) (result *model.ResponseNotificationBlast, err error) {
+
+	// queueDeclare := s.msBroker.QueueDeclareRepo(common.EmailKey)
+
+	// _, err = s.msBroker.PublishNotifArtikel(ctx, user, queueDeclare)
+	// if err != nil {
+	// 	return nil, err
+	// }
+
+	result = &model.ResponseNotificationBlast{
+		Title: user.Title,
+		Body: user.Body,
+	}
+
+	return result, nil
+}

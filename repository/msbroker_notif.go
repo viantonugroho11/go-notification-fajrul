@@ -10,22 +10,6 @@ import (
 	amqp "github.com/rabbitmq/amqp091-go"
 )
 
-// var ch *amqp.Channel
-//deprecated
-// func (msBroker *messageRepository) PublishNotification(ctx context.Context, user *model.PayloadNotificationRequest) (string, error) {
-
-// 	queue, _ := msBroker.confQueue.Ch.QueueDeclare(user.Type, false, false, false, false, nil)
-
-// 	err := msBroker.confQueue.Ch.Publish("", queue.Name, false, false, amqp.Publishing{
-// 		ContentType: "application/json",
-// 		Body:        []byte(`{"device":"` + user.Device + `","title":"` + user.Title + `","message":"` + user.Body + `","userid":"` + user.UserID + `"}`),
-// 	})
-
-// 	if err != nil {
-// 		return "", err
-// 	}
-// 	return common.SuccesMessage, nil
-// }
 
 func (msBroker *messageRepository) PublishNotifArtikel(ctx context.Context, user *model.PayloadNotificationRequest, channel *amqp.Queue) (string, error) {
 	err := msBroker.confQueue.Ch.Publish("", channel.Name, false, false, amqp.Publishing{
@@ -54,19 +38,7 @@ func (msBroker *messageRepository) QueueDeclareRepo(name string) *amqp.Queue {
 }
 
 
-// deprecated
-// func (msBroker *messageRepository) ConsumeNotificationFirebase() (result model.PayloadNotificationRequest, err error) {
-// 	queue, _ := msBroker.confQueue.Ch.QueueDeclare(common.FirebaseKey, false, false, false, false, nil)
-// 	_, err = msBroker.confQueue.Ch.Consume(queue.Name, "", true, false, false, false, nil)
-// 	if err != nil {
-// 		return result, err
-// 	}
-// 	return result, nil
-// 	// forever := make(chan bool)
-// }
-
-
-func (msBroker *messageRepository) ConsumeWorkerEmail(message <-chan amqp.Delivery) {
+func (msBroker *messageRepository) ConsumeWorkerEmail(message <-chan amqp.Delivery)(data *model.PayloadNotificationRequest, err error) {
 	var result model.PayloadNotificationRequest
 	for d := range message {
 		body := string(d.Body)
@@ -85,9 +57,12 @@ func (msBroker *messageRepository) ConsumeWorkerEmail(message <-chan amqp.Delive
 			Title:  title,
 		}
 		fmt.Println(result)
+		return &result, nil
+		
 		// msBroker.FirebasePushRepo(&result)
 	}
 	// msBroker.PublishNotification(&result)
+	return nil, nil
 }
 
 

@@ -18,10 +18,13 @@ func main() {
 	config := conf.New()
 
 	confQueue := conf.InitQueue(config)
+	confEmail := conf.AuthEmail(config)
 	msRepo := repository.NewMessageBrokerRepository(confQueue)
 
+	emailRepo := repository.NewEmailRepository(confQueue, confEmail)
+
 	msBroker := service.NewPublishService(msRepo)
-	msConsume := service.NewConsumeNotificationService(msRepo)
+	msConsume := service.NewConsumeNotificationService(msRepo, emailRepo)
 	e := echo.New()
 	api := e.Group("/api")
 	e.GET("/health",func(c echo.Context) error {

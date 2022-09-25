@@ -13,10 +13,11 @@ type ConsumeNotificationService interface {
 
 type consumeNotificationService struct {
 	msBroker repository.MessageBrokerNotificationRepository
+	emailRepo repository.EmailRepository
 }
 
-func NewConsumeNotificationService(msBroker repository.MessageBrokerNotificationRepository) ConsumeNotificationService {
-	return &consumeNotificationService{msBroker}
+func NewConsumeNotificationService(msBroker repository.MessageBrokerNotificationRepository, emailRepo repository.EmailRepository) ConsumeNotificationService {
+	return &consumeNotificationService{msBroker,emailRepo}
 }
 
 // func (s *consumeNotificationService) ConsumeNotificationFirebase() (result model.PayloadNotificationRequest, err error) {	
@@ -35,9 +36,12 @@ func (s *consumeNotificationService) ConsumeNotificationEmailArtikel(topicName s
 	if err != nil {
 		return result, err
 	}
-	fmt.Println("consume", consume)
 	go func() {
-		s.msBroker.ConsumeWorkerEmail(consume)
+		result,err := s.msBroker.ConsumeWorkerEmail(consume)
+		if err != nil {
+			fmt.Println("error consume", err)
+		}
+		s.emailRepo.EmailPushRepo(result)
 	}()
 	return result, nil
 }
