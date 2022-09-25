@@ -12,7 +12,6 @@ type EmailConfig struct {
 	AddressMail string
 	FromEmail string
 	SmtpAuth smtp.Auth
-
 }
 
 func AuthEmail(conf Config) EmailConfig{

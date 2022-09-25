@@ -6,9 +6,7 @@ import (
 	"notif-engine/model"
 )
 
-
-
-func (em *emailRepository) EmailPushRepo(user *model.PayloadNotificationRequest) (string, error){
+func (em *emailRepository) EmailPushRepo(user *model.PayloadNotificationRequest) (string, error) {
 	to := []string{
 		user.Device,
 	}
@@ -16,9 +14,8 @@ func (em *emailRepository) EmailPushRepo(user *model.PayloadNotificationRequest)
 		"To: " + user.Device + "\r\n" +
 		"Subject: " + user.Title + "\r\n\r\n" +
 		"" + user.Body + "\r\n")
-	
-		err := smtp.SendMail(em.confEmail.AddressMail, em.confEmail.SmtpAuth, em.confEmail.Username, to, msg)
-	
+
+	err := smtp.SendMail(em.confEmail.AddressMail, em.confEmail.SmtpAuth, em.confEmail.Username, to, msg)
 	if err != nil {
 		fmt.Println(err)
 		return "", err
@@ -28,23 +25,20 @@ func (em *emailRepository) EmailPushRepo(user *model.PayloadNotificationRequest)
 	return "success", nil
 }
 
-func (em *emailRepository) EmailPushTiketDonasi()(){
-
+func (em *emailRepository) EmailPushTiketDonasi() {
 
 	//use template html
-	
+
 }
 
-func (em *emailRepository) EmailPushNewsletter()(){
-
+func (em *emailRepository) EmailPushNewsletter() {
 
 	//use template html
-	
+
 }
 
-func (em *emailRepository) EmailPushKabarDonasi()(){
-
+func (em *emailRepository) EmailPushKabarDonasi() {
 
 	//use template html
-	
+
 }

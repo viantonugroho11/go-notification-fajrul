@@ -36,12 +36,38 @@ func PublishNotif(notifSrv notifSrv.PublishService) echo.HandlerFunc {
 
 func PublishNotificationArtikel(notifSrv notifSrv.PublishService) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		return nil
+		payload := &model.PayloadNotificationArtikel{}
+		c.Bind(payload)
+
+		if err := common.ValidateStruct(payload); err != nil {
+			return c.JSON(400, err)
+		}
+
+		// call service	
+		result, err := notifSrv.PublishNotificationArtikel(c.Request().Context(), payload)
+		if err != nil {
+			return c.JSON(400, err)
+		}
+
+		return common.SuccessResponse(c, 200, result)
 	}
 }
 
 func PublishNotificationKabarDonasi(notifSrv notifSrv.PublishService) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		return nil
+		payload := &model.PayloadNotificationKabarDonasi{}
+		c.Bind(payload)
+
+		if err := common.ValidateStruct(payload); err != nil {
+			return c.JSON(400, err)
+		}
+
+		// call service	
+		result, err := notifSrv.PublishNotificationKabarDonasi(c.Request().Context(), payload)
+		if err != nil {
+			return c.JSON(400, err)
+		}
+
+		return common.SuccessResponse(c, 200, result)
 	}
 }

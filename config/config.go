@@ -20,7 +20,7 @@ var (
 type Config struct {
 	Env      string            `mapstructure:"env"`
 	Port     int               `mapstructure:"port"`
-	Database PSQL              `mapstructure:"database"`
+	Database SQL              `mapstructure:"database"`
 	Email    Email             `mapstructure:"email"`
 	Queue    Queue             `mapstructure:"queue"`
 	Firebase Firebase          `mapstructure:"firebase"`
@@ -59,11 +59,11 @@ type PostgresConfig struct {
 	MaxOpenConnections int  `mapstructure:"maxOpenConnections"`
 	MaxIdleConnections int  `mapstructure:"maxIdleConnections"`
 	ConnectTimeout     int  `mapstructure:"connectTimeout"`
-	Master             PSQL `mapstructure:"master"`
-	Slave              PSQL `mapstructure:"slave"`
+	Master             SQL `mapstructure:"master"`
+	Slave              SQL `mapstructure:"slave"`
 }
 
-type PSQL struct {
+type SQL struct {
 	Host     string `mapstructure:"host"`
 	Port     string `mapstructure:"port"`
 	Schema   string `mapstructure:"schema"`

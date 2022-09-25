@@ -43,7 +43,7 @@ func (s *publishService) PublishNotif(ctx context.Context, user *model.PayloadNo
 
 func (s *publishService) PublishNotificationArtikel(ctx context.Context, user *model.PayloadNotificationArtikel) (result *model.ResponseNotificationBlast, err error) {
 
-	queueDeclare := s.msBroker.QueueDeclareRepo(common.EmailKey)
+	queueDeclare := s.msBroker.QueueDeclareRepo(common.EmailArtikel)
 
 	_, err = s.msBroker.PublishNotificationArtikelRepo(ctx, user, queueDeclare)
 	if err != nil {
@@ -60,12 +60,12 @@ func (s *publishService) PublishNotificationArtikel(ctx context.Context, user *m
 
 func (s *publishService) PublishNotificationKabarDonasi(ctx context.Context, user *model.PayloadNotificationKabarDonasi) (result *model.ResponseNotificationBlast, err error) {
 
-	// queueDeclare := s.msBroker.QueueDeclareRepo(common.EmailKey)
+	queueDeclare := s.msBroker.QueueDeclareRepo(common.EmailKabarDonasi)
 
-	// _, err = s.msBroker.PublishNotifArtikel(ctx, user, queueDeclare)
-	// if err != nil {
-	// 	return nil, err
-	// }
+	_, err = s.msBroker.PublishNotificationKabarDonasiRepo(ctx, user, queueDeclare)
+	if err != nil {
+		return nil, err
+	}
 
 	result = &model.ResponseNotificationBlast{
 		Title: user.Title,

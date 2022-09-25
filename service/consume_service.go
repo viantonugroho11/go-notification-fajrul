@@ -2,6 +2,7 @@ package service
 
 import (
 	"encoding/json"
+	"fmt"
 	// "fmt"
 	"notif-engine/model"
 	"notif-engine/repository"
@@ -44,10 +45,13 @@ func (s *consumeNotificationService) ConsumeNotificationEmailArtikel(topicName s
 				Body:   message,
 				Title:  title,
 			}
-			s.emailRepo.EmailPushRepo(&result)
+			_,err=s.emailRepo.EmailPushRepo(&result)
+			if err!=nil{
+				fmt.Println(err)
+			}
+
 	}
 	}()
-	print("berjalan")
 	<-consume
 	return result, nil
 }
