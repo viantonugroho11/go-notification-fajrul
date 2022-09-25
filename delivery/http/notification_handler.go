@@ -1,7 +1,6 @@
 package http
 
 import (
-	"fmt"
 	"notif-engine/common"
 	"notif-engine/model"
 	notifSrv "notif-engine/service"
@@ -20,7 +19,6 @@ func PublishNotif(notifSrv notifSrv.PublishService) echo.HandlerFunc {
 		
 		payload := &model.PayloadNotificationRequest{}
 		c.Bind(payload)
-		fmt.Println("payload handler",payload)
 
 		if err := common.ValidateStruct(payload); err != nil {
 			return c.JSON(400, err)

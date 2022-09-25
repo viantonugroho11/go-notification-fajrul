@@ -27,14 +27,14 @@ func main() {
 	msConsume := service.NewConsumeNotificationService(msRepo, emailRepo)
 	e := echo.New()
 	api := e.Group("/api")
-	e.GET("/health",func(c echo.Context) error {
+	e.GET("/health", func(c echo.Context) error {
 		return c.JSON(200, "OK")
 	})
+
+	fmt.Println("masuk")
+
+	go consumeHandler.NewNotificationConsume(msConsume)
 	
-
-
-		fmt.Println("masuk")
-		go consumeHandler.NewNotificationConsume(msConsume)
 	httpHandler.NewNotificationHandler(api.Group("/v1/notification"), msBroker)
 	// api
 

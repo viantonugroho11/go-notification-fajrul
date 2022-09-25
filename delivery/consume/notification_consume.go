@@ -12,9 +12,8 @@ func NewNotificationConsume(consume csmeService.ConsumeNotificationService) {
 }
 
 func EmailConsumeArtikel(consume csmeService.ConsumeNotificationService) {
-		result, err := consume.ConsumeNotificationEmailArtikel(common.FirebaseKey)
+		_, err := consume.ConsumeNotificationEmailArtikel(common.FirebaseKey)
 		if err != nil {
 			fmt.Println("error consume", err)
 		}
-		fmt.Println("result", result)
 }

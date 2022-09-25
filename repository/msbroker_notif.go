@@ -3,7 +3,6 @@ package repository
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"notif-engine/common"
 	"notif-engine/model"
 
@@ -56,12 +55,8 @@ func (msBroker *messageRepository) ConsumeWorkerEmail(message <-chan amqp.Delive
 			Body:   message,
 			Title:  title,
 		}
-		fmt.Println(result)
 		return &result, nil
-		
-		// msBroker.FirebasePushRepo(&result)
 	}
-	// msBroker.PublishNotification(&result)
 	return nil, nil
 }
 

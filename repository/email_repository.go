@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"fmt"
 	"net/smtp"
 	"notif-engine/model"
 )
@@ -11,15 +12,19 @@ func (em *emailRepository) EmailPushRepo(user *model.PayloadNotificationRequest)
 	to := []string{
 		user.Device,
 	}
-
-	msg := []byte("From: " + em.confEmail.AddressMail + "\r\n" +
+	msg := []byte("From: " + em.confEmail.FromEmail + "\r\n" +
 		"To: " + user.Device + "\r\n" +
 		"Subject: " + user.Title + "\r\n\r\n" +
 		"" + user.Body + "\r\n")
-	err := smtp.SendMail(em.confEmail.AddressMail,em.confEmail.SmtpAuth, em.confEmail.AddressMail, to, msg)
+	
+		err := smtp.SendMail(em.confEmail.AddressMail, em.confEmail.SmtpAuth, em.confEmail.Username, to, msg)
+	
 	if err != nil {
+		fmt.Println(err)
 		return "", err
 	}
+
+	fmt.Print("Email Sent!")
 	return "success", nil
 }
 
