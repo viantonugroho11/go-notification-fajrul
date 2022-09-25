@@ -38,9 +38,9 @@ type MessageBrokerNotificationRepository interface {
 	ConsumeWorkerEmail(message <-chan amqp.Delivery)(data *model.PayloadNotificationRequest, err error)
 	
 
-	// PublishNotificationArtikelRepo(ctx context.Context, user *model.PayloadNotificationRequest, channel *amqp.Queue) (string, error)
+	PublishNotificationArtikelRepo(ctx context.Context, user *model.PayloadNotificationArtikel, channel *amqp.Queue) (string, error)
 
-	// PublishNotificationKabarDonasiRepo(ctx context.Context, user *model.PayloadNotificationRequest, channel *amqp.Queue) (string, error)
+	PublishNotificationKabarDonasiRepo(ctx context.Context, user *model.PayloadNotificationKabarDonasi, channel *amqp.Queue) (string, error)
 }
 
 type firebaseRepository struct {

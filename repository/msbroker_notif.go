@@ -12,8 +12,32 @@ import (
 
 func (msBroker *messageRepository) PublishNotifArtikel(ctx context.Context, user *model.PayloadNotificationRequest, channel *amqp.Queue) (string, error) {
 	err := msBroker.confQueue.Ch.Publish("", channel.Name, false, false, amqp.Publishing{
+		ContentType:     "application/json",
+		Body:            []byte(`{"device":"` + user.Device + `","title":"` + user.Title + `","message":"` + user.Body + `","userid":"` + user.UserID + `"}`),
+	})
+
+	if err != nil {
+		return "", err
+	}
+	return common.SuccesMessage, nil
+}
+
+func (msBroker *messageRepository) PublishNotificationArtikelRepo(ctx context.Context, user *model.PayloadNotificationArtikel, channel *amqp.Queue) (string, error) {
+	err := msBroker.confQueue.Ch.Publish("", channel.Name, false, false, amqp.Publishing{
 		ContentType: "application/json",
-		Body:        []byte(`{"device":"` + user.Device + `","title":"` + user.Title + `","message":"` + user.Body + `","userid":"` + user.UserID + `"}`),
+		Body:        []byte(`{"title":"` + user.Title + `","message":"` + user.Body + `"}`),
+	})
+
+	if err != nil {
+		return "", err
+	}
+	return common.SuccesMessage, nil
+}
+
+func (msBroker *messageRepository) PublishNotificationKabarDonasiRepo(ctx context.Context, user *model.PayloadNotificationKabarDonasi, channel *amqp.Queue) (string, error){
+	err := msBroker.confQueue.Ch.Publish("", channel.Name, false, false, amqp.Publishing{
+		ContentType: "application/json",
+		Body:        []byte(`{"title":"` + user.Title + `","message":"` + user.Body + `"}`),
 	})
 
 	if err != nil {
@@ -36,7 +60,7 @@ func (msBroker *messageRepository) QueueDeclareRepo(name string) *amqp.Queue {
 	return &queue
 }
 
-
+//deprecated
 func (msBroker *messageRepository) ConsumeWorkerEmail(message <-chan amqp.Delivery)(data *model.PayloadNotificationRequest, err error) {
 	var result model.PayloadNotificationRequest
 	for d := range message {

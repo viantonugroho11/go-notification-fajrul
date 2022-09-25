@@ -1,10 +1,11 @@
 package service
 
 import (
-	"fmt"
+	"encoding/json"
+	// "fmt"
 	"notif-engine/model"
 	"notif-engine/repository"
-	"sync"
+	// "sync"
 )
 
 type ConsumeNotificationService interface {
@@ -25,17 +26,28 @@ func NewConsumeNotificationService(msBroker repository.MessageBrokerNotification
 func (s *consumeNotificationService) ConsumeNotificationEmailArtikel(topicName string) (result model.PayloadNotificationRequest, err error) {
 	declareQueue := s.msBroker.QueueDeclareRepo(topicName)
 	consume, _ := s.msBroker.ConsumeNotifArtikel(declareQueue)
-	var wg sync.WaitGroup
-	wg.Add(1)
-	go func() {
-			result, err := s.msBroker.ConsumeWorkerEmail(consume)
-			if err != nil {
-				fmt.Println("error consume", err)
-			
+
+	go func(){
+		for d := range consume {
+			body := string(d.Body)
+			jsondata := []byte(body)
+			var fire interface{}
+			json.Unmarshal(jsondata, &fire)
+			decode := fire.(map[string]interface{})
+			device := decode["device"].(string)
+			userid := decode["userid"].(string)
+			message := decode["message"].(string)
+			title := decode["title"].(string)
+			result = model.PayloadNotificationRequest{
+				Device: device,
+				UserID: userid,
+				Body:   message,
+				Title:  title,
 			}
-			s.emailRepo.EmailPushRepo(result)
-		wg.Done()
-		}()
-	wg.Wait()
+			s.emailRepo.EmailPushRepo(&result)
+	}
+	}()
+	print("berjalan")
+	<-consume
 	return result, nil
 }
