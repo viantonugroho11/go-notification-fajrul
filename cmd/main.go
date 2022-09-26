@@ -23,10 +23,12 @@ func main() {
 
 	msRepo := repository.NewMessageBrokerRepository(confQueue)
 	emailRepo := repository.NewEmailRepository(confQueue, confEmail)
-	_ = repository.NewMysqlNewsletterRepository(confDb)
+	mysqlNewsRepo := repository.NewMysqlNewsletterRepository(confDb)
 
 	msBroker := service.NewPublishService(msRepo)
 	msConsume := service.NewConsumeNotificationService(msRepo, emailRepo)
+	mysqlNews := service.NewNewsletterService(mysqlNewsRepo)
+
 	e := echo.New()
 	api := e.Group("/api")
 	e.GET("/health", func(c echo.Context) error {
@@ -38,6 +40,7 @@ func main() {
 	go consumeHandler.NewNotificationConsume(msConsume)
 	
 	httpHandler.NewNotificationHandler(api.Group("/v1/notification"), msBroker)
+	httpHandler.NewNewsletterHandler(api.Group("/v1/newsletter"), mysqlNews)
 	// api
 
 	e.Logger.Fatal(e.Start(":1324"))

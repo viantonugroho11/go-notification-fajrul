@@ -71,3 +71,4 @@ func PublishNotificationKabarDonasi(notifSrv notifSrv.PublishService) echo.Handl
 		return common.SuccessResponse(c, 200, result)
 	}
 }
+

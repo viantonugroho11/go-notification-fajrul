@@ -35,6 +35,19 @@ type MysqlNewsletterRepository interface {
 	GetAllNewsletter() ([]model.GetAllNewsletter, error)
 }
 
+type mysqlKabarDonasiRepository struct {
+	Conn config.DatabaseConfig
+}
+
+func NewMysqlKabarDonasiRepository(conn config.DatabaseConfig) MysqlKabarDonasiRepository {
+	return &mysqlKabarDonasiRepository{conn}
+}
+
+type MysqlKabarDonasiRepository interface {
+	GetAllUserByDonasiID(ctx context.Context, id string) (result []model.GetEmailUserKabarDonasi,err error)
+	GetUserStatusNotyetByDonasiID(ctx context.Context, id string) (result []model.GetEmailUserKabarDonasi,err error)
+}
+
 
 type messageRepository struct {
 	confQueue config.MessageBrokerConfig

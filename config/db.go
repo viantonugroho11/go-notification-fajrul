@@ -33,7 +33,7 @@ func InitDb(conf Config) DatabaseConfig {
 	if err != nil {
 		fmt.Errorf("Error connecting to database: %s", err)
 	}
-	fmt.Println("connected to database")
+	fmt.Println("connected to database",conn)
 	return DatabaseConfig{
 		Host:         conf.Database.Host,
 		Port:         conf.Database.Port,
