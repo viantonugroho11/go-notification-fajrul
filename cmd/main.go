@@ -26,7 +26,7 @@ func main() {
 	mysqlNewsRepo := repository.NewMysqlNewsletterRepository(confDb)
 
 	msBroker := service.NewPublishService(msRepo)
-	msConsume := service.NewConsumeNotificationService(msRepo, emailRepo)
+	msConsume := service.NewConsumeNotificationService(msRepo, emailRepo,mysqlNewsRepo)
 	mysqlNews := service.NewNewsletterService(mysqlNewsRepo)
 
 	e := echo.New()

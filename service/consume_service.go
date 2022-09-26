@@ -10,25 +10,26 @@ import (
 )
 
 type ConsumeNotificationService interface {
-
 	ConsumeNotificationEmailArtikel(topicName string) (result model.PayloadNotificationRequest, err error)
+	ConsumeEmailNewsletterArtikelService(topicName string) (result model.PayloadNotificationRequest, err error)
+	ConsumeEmailKabarDonasiService(topicName string) (result model.PayloadNotificationRequest, err error)
 }
 
 type consumeNotificationService struct {
 	msBroker  repository.MessageBrokerNotificationRepository
 	emailRepo repository.EmailRepository
+	mysqlNews repository.MysqlNewsletterRepository
 }
 
-func NewConsumeNotificationService(msBroker repository.MessageBrokerNotificationRepository, emailRepo repository.EmailRepository) ConsumeNotificationService {
-	return &consumeNotificationService{msBroker, emailRepo}
+func NewConsumeNotificationService(msBroker repository.MessageBrokerNotificationRepository, emailRepo repository.EmailRepository, mysqlNews repository.MysqlNewsletterRepository) ConsumeNotificationService {
+	return &consumeNotificationService{msBroker, emailRepo, mysqlNews}
 }
-
 
 func (s *consumeNotificationService) ConsumeNotificationEmailArtikel(topicName string) (result model.PayloadNotificationRequest, err error) {
 	declareQueue := s.msBroker.QueueDeclareRepo(topicName)
 	consume, _ := s.msBroker.ConsumeNotifArtikel(declareQueue)
 
-	go func(){
+	go func() {
 		for d := range consume {
 			body := string(d.Body)
 			jsondata := []byte(body)
@@ -45,12 +46,79 @@ func (s *consumeNotificationService) ConsumeNotificationEmailArtikel(topicName s
 				Body:   message,
 				Title:  title,
 			}
-			_,err=s.emailRepo.EmailPushRepo(&result)
-			if err!=nil{
+			_, err = s.emailRepo.EmailPushRepo(&result)
+			if err != nil {
 				fmt.Println(err)
 			}
 
-	}
+		}
+	}()
+	<-consume
+	return result, nil
+}
+
+func (s *consumeNotificationService) ConsumeEmailNewsletterArtikelService(topicName string) (result model.PayloadNotificationRequest, err error) {
+	declareQueue := s.msBroker.QueueDeclareRepo(topicName)
+	consume, _ := s.msBroker.ConsumeNotifArtikel(declareQueue)
+	go func() {
+		for d := range consume {
+			body := string(d.Body)
+			jsondata := []byte(body)
+			var fire interface{}
+			json.Unmarshal(jsondata, &fire)
+			decode := fire.(map[string]interface{})
+			message := decode["message"].(string)
+			title := decode["title"].(string)
+
+			query, err := s.mysqlNews.GetAllNewsletter()
+
+			if err != nil {
+				fmt.Println(err)
+			}
+			for _, v := range query {
+				result = model.PayloadNotificationRequest{
+					Body:   message,
+					Title:  title,
+					Device: v.Email,
+				}
+				_, err = s.emailRepo.EmailPushRepo(&result)
+
+				if err != nil {
+					fmt.Println(err)
+				}
+			}
+		}
+	}()
+	<-consume
+	return result, nil
+}
+
+func (s *consumeNotificationService) ConsumeEmailKabarDonasiService(topicName string) (result model.PayloadNotificationRequest, err error) {
+	declareQueue := s.msBroker.QueueDeclareRepo(topicName)
+	consume, _ := s.msBroker.ConsumeNotifArtikel(declareQueue)
+
+	go func() {
+		for d := range consume {
+			body := string(d.Body)
+			jsondata := []byte(body)
+			var fire interface{}
+			json.Unmarshal(jsondata, &fire)
+			decode := fire.(map[string]interface{})
+			device := decode["device"].(string)
+			userid := decode["userid"].(string)
+			message := decode["message"].(string)
+			title := decode["title"].(string)
+			result = model.PayloadNotificationRequest{
+				Device: device,
+				UserID: userid,
+				Body:   message,
+				Title:  title,
+			}
+			_, err = s.emailRepo.EmailPushRepo(&result)
+			if err != nil {
+				fmt.Println(err)
+			}
+		}
 	}()
 	<-consume
 	return result, nil

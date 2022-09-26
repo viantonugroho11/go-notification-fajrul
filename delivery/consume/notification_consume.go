@@ -8,6 +8,7 @@ import (
 
 func NewNotificationConsume(consume csmeService.ConsumeNotificationService) {
 	go EmailConsumeArtikel(consume)
+	go EmailConsumeNewsletterArtikel(consume)
 	fmt.Println("masuk")
 }
 
@@ -16,4 +17,11 @@ func EmailConsumeArtikel(consume csmeService.ConsumeNotificationService) {
 		if err != nil {
 			fmt.Println("error consume", err)
 		}
+}
+
+func EmailConsumeNewsletterArtikel(consume csmeService.ConsumeNotificationService) {
+	_, err := consume.ConsumeEmailNewsletterArtikelService(common.EmailArtikel)
+	if err != nil {
+		fmt.Println("error consume", err)
+	}
 }
