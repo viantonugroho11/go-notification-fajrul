@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"fmt"
 	"notif-engine/model"
 )
 
@@ -19,11 +20,21 @@ func(s *mysqlKabarDonasiRepository) GetAllUserByDonasiID(ctx context.Context,id 
 
 
 func (s *mysqlKabarDonasiRepository) GetUserStatusNotyetByDonasiID(ctx context.Context, id string) (result []model.GetEmailUserKabarDonasi,err error){
-	query := `SELECT email FROM user_kabar_donasi WHERE status = 'notyet' and donasi_id = ?`
+	query := `SELECT email FROM transaksi_donasis WHERE status = '1' and donasi_id = ?`
 
-	err = s.Conn.DB.QueryRow(query).Scan(&result)
+	rows,err := s.Conn.DB.Query(query,id)
 	if err != nil {
 		return nil, err
+	}
+	for rows.Next() {
+		var kabarDonasi model.GetEmailUserKabarDonasi
+		if rows.Scan(&kabarDonasi.Email) == nil {
+			err := rows.Scan(&kabarDonasi.Email)
+			if err != nil {
+				fmt.Println("error 1", err)
+			}
+			result = append(result, kabarDonasi)
+		}
 	}
 
 	return result, nil
