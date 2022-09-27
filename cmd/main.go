@@ -24,11 +24,12 @@ func main() {
 	msRepo := repository.NewMessageBrokerRepository(confQueue)
 	emailRepo := repository.NewEmailRepository(confQueue, confEmail)
 	mysqlNewsRepo := repository.NewMysqlNewsletterRepository(confDb)
+	mysqlKabarDonasiRepo := repository.NewMysqlKabarDonasiRepository(confDb)
 
 	msBroker := service.NewPublishService(msRepo)
-	msConsume := service.NewConsumeNotificationService(msRepo, emailRepo,mysqlNewsRepo)
+	msConsume := service.NewConsumeNotificationService(msRepo, emailRepo,mysqlNewsRepo, mysqlKabarDonasiRepo)
 	mysqlNews := service.NewNewsletterService(mysqlNewsRepo)
-
+	
 	e := echo.New()
 	api := e.Group("/api")
 	e.GET("/health", func(c echo.Context) error {

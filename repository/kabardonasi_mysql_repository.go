@@ -19,7 +19,7 @@ func(s *mysqlKabarDonasiRepository) GetAllUserByDonasiID(ctx context.Context,id 
 }
 
 
-func (s *mysqlKabarDonasiRepository) GetUserStatusNotyetByDonasiID(ctx context.Context, id string) (result []model.GetEmailUserKabarDonasi,err error){
+func (s *mysqlKabarDonasiRepository) GetUserStatusNotyetByDonasiID(id string) (result []model.GetEmailUserKabarDonasi,err error){
 	query := `SELECT email FROM transaksi_donasis WHERE status = '1' and donasi_id = ?`
 
 	rows,err := s.Conn.DB.Query(query,id)

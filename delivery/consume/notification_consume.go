@@ -25,3 +25,10 @@ func EmailConsumeNewsletterArtikel(consume csmeService.ConsumeNotificationServic
 		fmt.Println("error consume", err)
 	}
 }
+
+func EmailConsumeKabarDonasi(consume csmeService.ConsumeNotificationService){
+	_, err := consume.ConsumeEmailKabarDonasiService(common.EmailKabarDonasi)
+	if err != nil {
+		fmt.Println("error consume", err)
+	}
+}

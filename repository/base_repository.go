@@ -45,7 +45,7 @@ func NewMysqlKabarDonasiRepository(conn config.DatabaseConfig) MysqlKabarDonasiR
 
 type MysqlKabarDonasiRepository interface {
 	GetAllUserByDonasiID(ctx context.Context, id string) (result []model.GetEmailUserKabarDonasi,err error)
-	GetUserStatusNotyetByDonasiID(ctx context.Context, id string) (result []model.GetEmailUserKabarDonasi,err error)
+	GetUserStatusNotyetByDonasiID(id string) (result []model.GetEmailUserKabarDonasi,err error)
 }
 
 

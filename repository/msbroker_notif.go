@@ -37,7 +37,7 @@ func (msBroker *messageRepository) PublishNotificationArtikelRepo(ctx context.Co
 func (msBroker *messageRepository) PublishNotificationKabarDonasiRepo(ctx context.Context, user *model.PayloadNotificationKabarDonasi, channel *amqp.Queue) (string, error){
 	err := msBroker.confQueue.Ch.Publish("", channel.Name, false, false, amqp.Publishing{
 		ContentType: "application/json",
-		Body:        []byte(`{"title":"` + user.Title + `","message":"` + user.Body + `"}`),
+		Body:        []byte(`{"title":"` + user.Title + `","message":"` + user.Body + `","donasiid":"` + user.DonasiId + `"}`),
 	})
 
 	if err != nil {

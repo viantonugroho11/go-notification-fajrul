@@ -19,10 +19,11 @@ type consumeNotificationService struct {
 	msBroker  repository.MessageBrokerNotificationRepository
 	emailRepo repository.EmailRepository
 	mysqlNews repository.MysqlNewsletterRepository
+	mysqlKbrDonasi repository.MysqlKabarDonasiRepository
 }
 
-func NewConsumeNotificationService(msBroker repository.MessageBrokerNotificationRepository, emailRepo repository.EmailRepository, mysqlNews repository.MysqlNewsletterRepository) ConsumeNotificationService {
-	return &consumeNotificationService{msBroker, emailRepo, mysqlNews}
+func NewConsumeNotificationService(msBroker repository.MessageBrokerNotificationRepository, emailRepo repository.EmailRepository, mysqlNews repository.MysqlNewsletterRepository, mysqlKbrDonasi repository.MysqlKabarDonasiRepository) ConsumeNotificationService {
+	return &consumeNotificationService{msBroker, emailRepo, mysqlNews, mysqlKbrDonasi}
 }
 
 func (s *consumeNotificationService) ConsumeNotificationEmailArtikel(topicName string) (result model.PayloadNotificationRequest, err error) {
@@ -104,19 +105,25 @@ func (s *consumeNotificationService) ConsumeEmailKabarDonasiService(topicName st
 			var fire interface{}
 			json.Unmarshal(jsondata, &fire)
 			decode := fire.(map[string]interface{})
-			device := decode["device"].(string)
-			userid := decode["userid"].(string)
+			donasiid := decode["donasiid"].(string)
 			message := decode["message"].(string)
 			title := decode["title"].(string)
-			result = model.PayloadNotificationRequest{
-				Device: device,
-				UserID: userid,
-				Body:   message,
-				Title:  title,
-			}
-			_, err = s.emailRepo.EmailPushRepo(&result)
+
+			query, err := s.mysqlKbrDonasi.GetUserStatusNotyetByDonasiID(donasiid)
 			if err != nil {
 				fmt.Println(err)
+			}
+			for _, v := range query {
+				result = model.PayloadNotificationRequest{
+					Body:   message,
+					Title:  title,
+					Device: v.Email,
+				}
+				_, err = s.emailRepo.EmailPushRepo(&result)
+
+				if err != nil {
+					fmt.Println(err)
+				}
 			}
 		}
 	}()
