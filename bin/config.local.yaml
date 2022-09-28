@@ -1,7 +1,7 @@
 debug: true
 server:
   user_address: ":9567"
-  user_address_http: ":9568"
+  user_address_http: ":8080"
   article_address: "localhost:8567"
 database:
   host: 156.67.213.192
