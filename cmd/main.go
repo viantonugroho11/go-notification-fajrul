@@ -46,6 +46,7 @@ func main() {
 	httpHandler.NewNewsletterHandler(api.Group("/v1/newsletter"), mysqlNews)
 	// api
 
-	e.Logger.Fatal(e.Start(os.Getenv("PORT")))
+	fmt.Println("port: ",os.Getenv("PORT"))
+	e.Logger.Fatal(e.Start(":"+os.Getenv("PORT")))
 
 }
