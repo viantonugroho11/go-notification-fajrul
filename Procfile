@@ -1,1 +1,1 @@
-web: build/cmd
+web: bin/cmd
