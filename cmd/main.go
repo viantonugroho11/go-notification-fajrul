@@ -8,6 +8,7 @@ import (
 	"notif-engine/repository"
 	"notif-engine/service"
 
+	"os"
 	"github.com/labstack/echo/v4"
 	// amqp "github.com/rabbitmq/amqp091-go"
 )
@@ -16,6 +17,7 @@ import (
 
 func main() {
 	config := conf.New()
+	conf.InitHeroku()
 
 	confQueue := conf.InitQueue(config)
 	confEmail := conf.AuthEmail(config)
@@ -44,6 +46,6 @@ func main() {
 	httpHandler.NewNewsletterHandler(api.Group("/v1/newsletter"), mysqlNews)
 	// api
 
-	e.Logger.Fatal(e.Start(config.Server.UserAddressHttp))
+	e.Logger.Fatal(e.Start(os.Getenv("PORT")))
 
 }
