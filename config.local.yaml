@@ -14,7 +14,8 @@ queue:
   port: 6379
   pass:
   username:
-  dial: "amqps://siquinxc:29OzHKEFqBOrmxA8z6IRIMUewXXiAAaf@fly.rmq.cloudamqp.com/siquinxc"
+  # dial: "amqps://siquinxc:29OzHKEFqBOrmxA8z6IRIMUewXXiAAaf@fly.rmq.cloudamqp.com/siquinxc"
+  dial: "amqps://fhmnghex:wxUM8ZsljU3-jn9PK72lyCXCqmSzHLe_@mustang.rmq.cloudamqp.com/fhmnghex"
 email:
   host: mail.fajrulislam.or.id
   port: 465

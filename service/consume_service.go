@@ -29,9 +29,11 @@ func NewConsumeNotificationService(msBroker repository.MessageBrokerNotification
 func (s *consumeNotificationService) ConsumeNotificationEmailArtikel(topicName string) (result model.PayloadNotificationRequest, err error) {
 	declareQueue := s.msBroker.QueueDeclareRepo(topicName)
 	consume, _ := s.msBroker.ConsumeNotifArtikel(declareQueue)
-
+	fmt.Println("Email Notif")
 	go func() {
 		for d := range consume {
+			fmt.Println("Email Artikel")
+			fmt.Println("consume Artikel", d.Body)
 			body := string(d.Body)
 			jsondata := []byte(body)
 			var fire interface{}
@@ -47,6 +49,7 @@ func (s *consumeNotificationService) ConsumeNotificationEmailArtikel(topicName s
 				Body:   message,
 				Title:  title,
 			}
+			fmt.Println("result Biasa", result)
 			_, err = s.emailRepo.EmailPushRepo(&result)
 			if err != nil {
 				fmt.Println(err)
@@ -61,9 +64,14 @@ func (s *consumeNotificationService) ConsumeNotificationEmailArtikel(topicName s
 func (s *consumeNotificationService) ConsumeEmailNewsletterArtikelService(topicName string) (result model.PayloadNotificationRequest, err error) {
 	declareQueue := s.msBroker.QueueDeclareRepo(topicName)
 	consume, _ := s.msBroker.ConsumeNotifArtikel(declareQueue)
+	fmt.Println("Email Newsletter")
 	go func() {
+		query, err := s.mysqlNews.GetAllNewsletter()
 		for d := range consume {
+			fmt.Println("Email Newsletter")
+			fmt.Println("consume Newsletter", d.Body)
 			body := string(d.Body)
+
 			jsondata := []byte(body)
 			var fire interface{}
 			json.Unmarshal(jsondata, &fire)
@@ -71,17 +79,20 @@ func (s *consumeNotificationService) ConsumeEmailNewsletterArtikelService(topicN
 			message := decode["message"].(string)
 			title := decode["title"].(string)
 
-			query, err := s.mysqlNews.GetAllNewsletter()
+			fmt.Println("Data", message, title)
 
 			if err != nil {
 				fmt.Println(err)
 			}
+			fmt.Println(query)
 			for _, v := range query {
 				result = model.PayloadNotificationRequest{
 					Body:   message,
 					Title:  title,
 					Device: v.Email,
 				}
+				fmt.Println("result",result)
+				fmt.Println("email",v.Email)
 				_, err = s.emailRepo.EmailPushRepo(&result)
 
 				if err != nil {

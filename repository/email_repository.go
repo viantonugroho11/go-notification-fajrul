@@ -21,7 +21,7 @@ func (em *emailRepository) EmailPushRepo(user *model.PayloadNotificationRequest)
 		return "", err
 	}
 
-	fmt.Print("Email Sent!")
+	fmt.Println("Email Sent!")
 	return "success", nil
 }
 
