@@ -44,6 +44,6 @@ func main() {
 	httpHandler.NewNewsletterHandler(api.Group("/v1/newsletter"), mysqlNews)
 	// api
 
-	e.Logger.Fatal(e.Start(":1324"))
+	e.Logger.Fatal(e.Start(config.Server.UserAddressHttp))
 
 }
