@@ -38,6 +38,7 @@ func (msBroker *messageRepository) PublishNotificationKabarDonasiRepo(ctx contex
 	err := msBroker.confQueue.Ch.Publish("", channel.Name, false, false, amqp.Publishing{
 		ContentType: "application/json",
 		Body:        []byte(`{"title":"` + user.Title + `","message":"` + user.Body + `","donasiid":"` + user.DonasiId + `"}`),
+		
 	})
 
 	if err != nil {
